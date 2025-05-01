@@ -36,6 +36,7 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" required />
       </div>
+      <div class="mb-3 text-danger" id="loginMsg"></div>
       <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
   </div>
@@ -43,14 +44,20 @@
   <script>
     function loginUser(event) {
       event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const msg = document.getElementById('loginMsg');
+
       if (email === 'eggpoultry@admin' && password === 'admindashboard') {
+        msg.style.color = 'green';
+        msg.innerText = 'Logging in...';
         localStorage.setItem('isAdmin', 'true');
-        alert('Login successful! Redirecting...');
-        window.location.href = 'admin.html';
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 1000);
       } else {
-        alert('Invalid email or password.');
+        msg.style.color = 'red';
+        msg.innerText = 'Invalid email or password.';
       }
     }
   </script>
