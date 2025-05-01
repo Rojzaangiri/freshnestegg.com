@@ -121,11 +121,10 @@
   <pre id="recordsOutput" style="background: #fff; padding: 10px; border: 1px solid #ccc; border-radius: 6px;"></pre>
 </div>
 
-<!-- Script -->
+<!-- JavaScript -->
 <script>
   function checkAccess() {
-    const adminStatus = localStorage.getItem('isAdmin');
-    if (adminStatus !== 'true') {
+    if (localStorage.getItem('isAdmin') !== 'true') {
       alert('Access denied. Please login first.');
       window.location.href = 'login.html';
     }
@@ -139,10 +138,10 @@
 
   function updateStock(event) {
     event.preventDefault();
-    const newStock = document.getElementById(\"newStock\").value;
+    const newStock = document.getElementById("newStock").value;
     localStorage.setItem('stockCount', newStock);
-    document.getElementById(\"stockCount\").innerText = newStock;
-    alert(\"Stock updated to \" + newStock);
+    document.getElementById("stockCount").innerText = newStock;
+    alert("Stock updated to " + newStock);
     updateRecords();
   }
 
@@ -162,6 +161,7 @@
     document.getElementById('orderQty').value = '';
     document.getElementById('orderStatus').value = 'Delivered';
 
+    updateRecords();
     loadDashboard();
   }
 
@@ -180,8 +180,20 @@
     loadDashboard();
   }
 
+  function updateRecords() {
+    const stock = localStorage.getItem('stockCount') || '0';
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+    const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+    const records = {
+      Stock: stock,
+      Orders: orders,
+      Messages: messages
+    };
+    document.getElementById("recordsOutput").innerText = JSON.stringify(records, null, 2);
+  }
+
   function loadDashboard() {
-    document.getElementById(\"stockCount\").innerText = localStorage.getItem('stockCount') || '0';
+    document.getElementById("stockCount").innerText = localStorage.getItem('stockCount') || '0';
 
     const messages = JSON.parse(localStorage.getItem('messages') || '[]');
     const messageList = document.getElementById('messageList');
@@ -192,7 +204,7 @@
       li.textContent = msg;
       messageList.appendChild(li);
     });
-    document.getElementById(\"messageCount\").innerText = messages.length;
+    document.getElementById("messageCount").innerText = messages.length;
 
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
     const tbody = document.querySelector('#orderTable tbody');
@@ -208,17 +220,9 @@
       `;
       tbody.appendChild(row);
     });
-    document.getElementById(\"orderCount\").innerText = orders.length;
+    document.getElementById("orderCount").innerText = orders.length;
 
     updateRecords();
-  }
-
-  function updateRecords() {
-    const stock = localStorage.getItem('stockCount') || '0';
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    const messages = JSON.parse(localStorage.getItem('messages') || '[]');
-    const records = { Stock: stock, Orders: orders, Messages: messages };
-    document.getElementById(\"recordsOutput\").innerText = JSON.stringify(records, null, 2);
   }
 </script>
 
